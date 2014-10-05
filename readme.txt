@@ -7,7 +7,7 @@ Donate link: http://shop.webaware.com.au/downloads/flexible-map/
 Tags: google, map, maps, google maps, shortcode, google maps shortcode, kml
 Requires at least: 3.2.1
 Tested up to: 4.0
-Stable tag: 1.8.0
+Stable tag: 1.8.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -51,6 +51,7 @@ Many thanks to the generous efforts of these people for human translations:
 * French (fr) -- [mister klucha](http://profiles.wordpress.org/mister-klucha/)
 * German (de) -- [Carib Design](http://www.caribdesign.com/)
 * Greek (el) -- [Pantelis Orfanos](http://profiles.wordpress.org/ironwiller/)
+* Hungarian (hu) -- Krisztián Vörös
 * Norwegian: Bokmål (nb_NO) -- [neonnero](http://www.neonnero.com/)
 * Norwegian: Nynorsk (nn_NO) -- [neonnero](http://www.neonnero.com/)
 * Spanish (es) -- [edurramos](http://profiles.wordpress.org/edurramos/)
@@ -293,6 +294,10 @@ Either turn off CloudFlare Rocketscript :) or install the [Flxmap No Rocketscrip
 4. `[flexiblemap center="-34.916721,138.828878" width="500" height="400" title="Adelaide Hills" directions="true" showdirections="true" directionsfrom="Adelaide"]`
 
 == Changelog ==
+
+= 1.8.1 [2014-10-05] =
+* fixed: Hungarian translation (thanks, Krisztián Vörös)
+* changed: bump version of Google Maps API to 3.17
 
 = 1.8.0 [2014-08-31] =
 * fixed: Czech translation (thanks, [caslavak](http://profiles.wordpress.org/caslavak/)!)
