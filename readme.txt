@@ -7,7 +7,7 @@ Donate link: http://shop.webaware.com.au/downloads/flexible-map/
 Tags: google, map, maps, google maps, shortcode, google maps shortcode, kml
 Requires at least: 3.2.1
 Tested up to: 4.1
-Stable tag: 1.8.3
+Stable tag: 1.9.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -34,7 +34,7 @@ Flexible Map allows you to add Google Maps to your WordPress website.
 * directions can be dropped into any div element with an ID
 * minimal dependencies -- just WordPress and the Google Maps API
 
-Click to see [WP Flexible Map in action](http://flexible-map.webaware.net.au/).
+[Try WP Flexible Map online](http://flexible-map.webaware.net.au/).
 
 = Sponsorships =
 
@@ -55,7 +55,7 @@ Many thanks to the generous efforts of our translators:
 * Norwegian: Bokmål (nb_NO) -- [neonnero](http://www.neonnero.com/)
 * Norwegian: Nynorsk (nn_NO) -- [neonnero](http://www.neonnero.com/)
 * Spanish (es) -- [edurramos](http://profiles.wordpress.org/edurramos/)
-* Welsh (cy) -- ([Dylan](https://profiles.wordpress.org/dtom-ct-wp/))
+* Welsh (cy) -- [Dylan](https://profiles.wordpress.org/dtom-ct-wp/)
 
 The initial translations for all other languages were made using Google Translate, so it's likely that some will be truly awful! If you'd like to help out by translating this plugin, please [sign up for an account and dig in](http://translate.webaware.com.au/projects/flexible-map).
 
@@ -108,6 +108,7 @@ Either the center or the address paramater is required. If you provide both, the
 * **id**: the CSS id of the container div (instead of a random generated unique ID), e.g. *id="my_map"*
 * **zoom**: zoom level as an integer, larger is closer, e.g. *zoom="16"*
 * **maptype**: type of map to show, from [roadmap, satellite, hybrid, terrain], e.g. *maptype="satellite"*; default=roadmap
+* **maptypes**: types of maps in the map type controls, e.g. *maptypes="custom_type,satellite"*
 * **hidemaptype**: hide the map type controls, from [true, false], e.g. *hidemaptype="true"*; default=false
 * **hidepanning**: hide the panning controls, from [true, false], e.g. *hidepanning="true"*; default=true
 * **hidezooming**: hide the zoom controls, from [true, false], e.g. *hidezooming="true"*; default=false
@@ -147,14 +148,15 @@ There is a PHP function `flexmap_show_map()` for theme and plugin developers. Al
 
 There are also some filter hooks that allow you to change the behaviour of the plugin.
 
-* **flexmap_google_maps_api_args**: filter the array of arguments that will be passed to the Google Maps API, e.g. `'v'=>'3.exp'`, `'sensor'=>'false'`
-* **flexmap_google_maps_api_url**: filter the Google Maps API URL, as a string
-* **flexmap_shortcode_attrs**: filter the array of shortcode attributes, e.g. change the width and height
-* **flexmap_shortcode_styles**: filter the array of inline styles applied to the div wrapping the map, e.g. remove width and height so that it can be specified in the theme's stylesheets
-* **flexmap_shortcode_html**: filter the generated HTML, e.g. wrap another div around it, add a link to Google Maps, add some additonal script, etc.
-* **flexmap_shortcode_script**: filter the generated JavaScript
+* `flexmap_google_maps_api_args`: filter the array of arguments that will be passed to the Google Maps API, e.g. `'v'=>'3.exp'`, `'sensor'=>'false'`
+* `flexmap_google_maps_api_url`: filter the Google Maps API URL, as a string
+* `flexmap_shortcode_attrs`: filter the array of shortcode attributes, e.g. change the width and height
+* `flexmap_shortcode_styles`: filter the array of inline styles applied to the div wrapping the map, e.g. remove width and height so that it can be specified in the theme's stylesheets
+* `flexmap_shortcode_html`: filter the generated HTML, e.g. wrap another div around it, add a link to Google Maps, add some additonal script, etc.
+* `flexmap_shortcode_script`: filter the generated JavaScript
+* `flexmap_custom_map_types`: register custom Google Maps map types
 
-For more information and examples, see [the website](http://flexible-map.webaware.net.au/).
+For more information and examples, see [the reference website](http://flexible-map.webaware.net.au/).
 
 == Frequently Asked Questions ==
 
@@ -214,22 +216,30 @@ function force_flexmap_map_language($args) {
 
 The initial translations were made using Google Translate, so it's likely that some will be truly awful! If you'd like to help out by translating this plugin, please [sign up for an account and dig in](http://translate.webaware.com.au/projects/flexible-map).
 
-= The map is broken in jQuery UI tabs =
+= The map is broken in tabs / accordions =
 
-When you hide the map in a tab, and then click on the tab to reveal its contents, the map doesn't know how big to draw until it is revealed. You need to give Google Maps a nudge so that it will pick up the correct size and position when you reveal it. Download the .php file from [this gist](https://gist.github.com/webaware/05b27e3a99ccb00200f5), and install / activate to fix. If you'd prefer to add the jQuery code yourself, add this somewhere on the page (e.g. in your theme's footer):
+When you hide the map in a tab, and then click on the tab to reveal its contents, sometimes the map doesn't know how big to draw until it is revealed. Since v1.9.0 most such problems are automatically resolved for modern browsers, including Internet Explorer 11 or later. If you need to support earlier versions that don't support [MutationObserver](http://caniuse.com/#feat=mutationobserver), add some script to your website to handle this yourself.
+
+For jQuery UI tabs and accordions, download the .php file from [this gist](https://gist.github.com/webaware/05b27e3a99ccb00200f5), and install / activate it. If you'd prefer to add the jQuery code yourself, add this somewhere on the page (e.g. in your theme's footer):
 
 `<script>
-jQuery("body").on("tabsactivate", function(event, ui) {
-    if (ui.newPanel.length) {
-        $("#" + ui.newPanel[0].id + " div.flxmap-container").each(function() {
-            var flxmap = window[this.getAttribute("data-flxmap")];
-            flxmap.redrawOnce();
-        });
+(function($) {
+
+    function mapRedraw(event, ui) {
+        if (ui.newPanel.length) {
+            $("#" + ui.newPanel[0].id + " div.flxmap-container").each(function() {
+                var flxmap = window[this.getAttribute("data-flxmap")];
+                flxmap.redrawOnce();
+            });
+        }
     }
-});
+
+    $("body").on("accordionactivate", mapRedraw).on("tabsactivate", mapRedraw);
+
+})(jQuery);
 </script>`
 
-For jQuery versions 1.8 or older:
+For jQuery UI tabs versions 1.8 or older:
 
 `<script>
 jQuery("body").bind("tabsshow", function(event, ui) {
@@ -295,6 +305,15 @@ Either turn off CloudFlare Rocketscript :) or install the [Flxmap No Rocketscrip
 4. `[flexiblemap center="-34.916721,138.828878" width="500" height="400" title="Adelaide Hills" directions="true" showdirections="true" directionsfrom="Adelaide"]`
 
 == Changelog ==
+
+= 1.9.0 [2014-12-24] =
+* fixed: maps broken when hidden in tabs / accordions (not for IE 10 and earlier; uses MutationObserver)
+* fixed: strip spaces from map coordinates
+* fixed: suppress border radius on images within map containers
+* added: server-side lookup of address, to reduce the number of Google Maps queries when only an address is given
+* added: support for custom map types (inc. styled maps)
+* added: `maptypes` attribute for selecting which map types can be picked by visitors
+* changed: refactored JavaScript for localised strings
 
 = 1.8.3 [2014-12-17] =
 * fixed: CSS for directions in twentyfifteen theme and others that toss table-layout:fixed around willy nilly
