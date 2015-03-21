@@ -1,4 +1,5 @@
 /* stop some themes from messing up Google Maps' styling (e.g. twentyeleven, twentytwelve, twentythirteen...) */
+/* http://flexible-map.webaware.net.au/ */
 
 .flxmap-container * {
 	-webkit-box-sizing: content-box;
@@ -58,4 +59,9 @@
 		word-wrap: normal;
 	}
 
+}
+
+/* fix vertical copyright message on IE8 in some themes */
+.flxmap-container .gm-style-cc > div {
+	word-wrap: normal;
 }

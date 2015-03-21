@@ -1,6 +1,7 @@
 /*!
 JavaScript for the WordPress plugin wp-flexible-map
-copyright (c) 2011-2014 WebAware Pty Ltd, released under LGPL v2.1
+copyright (c) 2011-2015 WebAware Pty Ltd, released under LGPL v2.1
+http://flexible-map.webaware.net.au/
 */
 
 function FlexibleMap() {
@@ -770,7 +771,7 @@ FlexibleMap.prototype = (function() {
 				panel.appendChild(form);
 
 				// hack to fix IE<=7 name weirdness for dynamically created form elements;
-				// see http://msdn.microsoft.com/en-us/library/ms534184.aspx but have a hanky ready
+				// see https://msdn.microsoft.com/en-us/library/ms534184.aspx but have a hanky ready
 				if (typeof form.elements.from == "undefined") {
 					form.elements.from = from;
 				}
