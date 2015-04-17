@@ -6,7 +6,7 @@ Author URI: http://webaware.com.au/
 Donate link: http://shop.webaware.com.au/downloads/flexible-map/
 Tags: google, map, maps, google maps, shortcode, google maps shortcode, kml
 Requires at least: 3.2.1
-Tested up to: 4.1.1
+Tested up to: 4.2
 Stable tag: 1.9.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
